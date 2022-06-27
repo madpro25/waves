@@ -5,8 +5,13 @@ import 'package:just_audio/just_audio.dart';
 import 'package:waves/screens/commons/player_buttons.dart';
 import 'package:waves/screens/commons/playlist.dart';
 
+/// Represents metadata for the audio source
+/// Passed on as a tag to the audio source in the audio_player
 class AudioMetadata {
+  /// Title of the audio track
   final String title;
+
+  /// Artwork of the audio track
   final String artwork;
 
   AudioMetadata({required this.title, required this.artwork});
@@ -22,6 +27,7 @@ class Player extends StatefulWidget {
 class _PlayerState extends State<Player> {
   late AudioPlayer _audioPlayer;
 
+  /// The audio sources are declared in the initState function
   @override
   void initState() {
     super.initState();

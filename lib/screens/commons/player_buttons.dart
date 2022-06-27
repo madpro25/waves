@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
+/// A Row of buttons controlling the audio
 class PlayerButtons extends StatelessWidget {
   const PlayerButtons(this._audioPlayer, {Key? key}) : super(key: key);
   final AudioPlayer _audioPlayer;
@@ -12,18 +13,23 @@ class PlayerButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        /// Shuffle
         StreamBuilder<bool>(
           stream: _audioPlayer.shuffleModeEnabledStream,
           builder: (context, snapshot) {
             return _shuffleButton(context, snapshot.data ?? false);
           },
         ),
+
+        /// Previous
         StreamBuilder<SequenceState?>(
           stream: _audioPlayer.sequenceStateStream,
           builder: (_, __) {
             return _previousButton();
           },
         ),
+
+        /// Play/Pause/Restart
         StreamBuilder<PlayerState>(
           stream: _audioPlayer.playerStateStream,
           builder: (_, snapshot) {
@@ -31,12 +37,16 @@ class PlayerButtons extends StatelessWidget {
             return _playPauseButton(playerState!);
           },
         ),
+
+        /// Next
         StreamBuilder<SequenceState?>(
           stream: _audioPlayer.sequenceStateStream,
           builder: (_, __) {
             return _nextButton();
           },
         ),
+
+        /// Repeat loop mode
         StreamBuilder<LoopMode>(
           stream: _audioPlayer.loopModeStream,
           builder: (context, snapshot) {
@@ -47,6 +57,7 @@ class PlayerButtons extends StatelessWidget {
     );
   }
 
+  /// Enable or disable shuffling
   Widget _shuffleButton(BuildContext context, bool isEnabled) {
     return IconButton(
       icon: isEnabled
@@ -64,6 +75,7 @@ class PlayerButtons extends StatelessWidget {
     );
   }
 
+  /// Seek to the previous track if it exists
   Widget _previousButton() {
     return IconButton(
       icon: Icon(Icons.skip_previous),
@@ -71,6 +83,7 @@ class PlayerButtons extends StatelessWidget {
     );
   }
 
+  /// Seek to the next track if it exists
   Widget _nextButton() {
     return IconButton(
       icon: Icon(Icons.skip_next),
@@ -78,6 +91,11 @@ class PlayerButtons extends StatelessWidget {
     );
   }
 
+  /// Toggles the repeat loop mode
+  /// The modes are
+  /// 1. not repeating
+  /// 2. repeating the entire list
+  /// 3. repeating the current track
   Widget _repeatButton(BuildContext context, LoopMode loopMode) {
     final icons = [
       Icon(Icons.repeat),
@@ -99,6 +117,11 @@ class PlayerButtons extends StatelessWidget {
     );
   }
 
+  /// Play/Pause button
+  /// If an audio is playing, the pause icon is shown
+  /// If the audio has finished, the restart icon is shown
+  /// If the audio is paused or not started yet, the play icon is shown
+  /// If the audio is loading, a round progress indicator is shown
   Widget _playPauseButton(PlayerState playerState) {
     final processingState = playerState.processingState;
     if (processingState == ProcessingState.loading ||
